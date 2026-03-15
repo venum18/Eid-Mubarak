@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eid Mubarak</title>
+
+<style>
+
+body{
+margin:0;
+overflow:hidden;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#ff6ec4,#7873f5);
+}
+
+/* HERO */
+
+#hero{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+z-index:10;
+}
+
+button{
+
+padding:18px 45px;
+font-size:26px;
+border:none;
+border-radius:20px;
+
+background:linear-gradient(145deg,#ffd700,#ff9900);
+
+color:white;
+
+cursor:pointer;
+
+box-shadow:
+0 10px 25px rgba(0,0,0,0.4),
+inset 0 3px 6px rgba(255,255,255,0.5);
+
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.15) rotateX(10deg);
+}
+
+#message{
+
+display:none;
+margin-top:20px;
+font-size:32px;
+color:white;
+
+text-shadow:0 0 10px gold;
+
+}
+
+/* BUTTERFLY */
+
+.butterfly{
+position:absolute;
+width:60px;
+z-index:11;
+animation:fly 12s infinite linear;
+}
+
+@keyframes fly{
+
+0%{transform:translate(-200px,200px)}
+25%{transform:translate(400px,-200px)}
+50%{transform:translate(800px,200px)}
+75%{transform:translate(400px,400px)}
+100%{transform:translate(-200px,200px)}
+
+}
+
+/* LANTERNS */
+
+.lantern{
+position:absolute;
+font-size:40px;
+animation:float 8s infinite ease-in-out;
+}
+
+@keyframes float{
+
+0%{transform:translateY(0px)}
+50%{transform:translateY(-40px)}
+100%{transform:translateY(0px)}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="hero">
+
+<button onclick="surprise()">Surprise</button>
+
+<div id="message">
+
+🌙 Eid Mubarak Muhammad Bilal 🎉
+
+</div>
+
+</div>
+
+<img class="butterfly" src="https://cdn-icons-png.flaticon.com/512/616/616554.png">
+
+<div class="lantern" style="top:10%;left:10%">🏮</div>
+<div class="lantern" style="top:20%;right:15%">🏮</div>
+<div class="lantern" style="bottom:20%;left:25%">🏮</div>
+<div class="lantern" style="bottom:15%;right:20%">🏮</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+
+// THREE JS SCENE
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+75,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+);
+
+const renderer = new THREE.WebGLRenderer({alpha:true});
+
+renderer.setSize(window.innerWidth,window.innerHeight);
+
+document.body.appendChild(renderer.domElement);
+
+// MOON
+
+const moonGeometry = new THREE.SphereGeometry(5,32,32);
+
+const moonMaterial = new THREE.MeshBasicMaterial({
+color:0xffffcc
+});
+
+const moon = new THREE.Mesh(moonGeometry,moonMaterial);
+
+moon.position.set(10,6,-20);
+
+scene.add(moon);
+
+// PARTICLES
+
+const particlesGeometry = new THREE.BufferGeometry();
+
+const particlesCount = 800;
+
+const posArray = new Float32Array(particlesCount*3);
+
+for(let i=0;i<particlesCount*3;i++){
+
+posArray[i]=(Math.random()-0.5)*80;
+
+}
+
+particlesGeometry.setAttribute('position',
+
+new THREE.BufferAttribute(posArray,3)
+
+);
+
+const particlesMaterial = new THREE.PointsMaterial({
+size:0.08
+});
+
+const particlesMesh = new THREE.Points(
+particlesGeometry,
+particlesMaterial
+);
+
+scene.add(particlesMesh);
+
+camera.position.z=20;
+
+// ANIMATION
+
+function animate(){
+
+requestAnimationFrame(animate);
+
+particlesMesh.rotation.y+=0.0007;
+
+renderer.render(scene,camera);
+
+}
+
+animate();
+
+// SURPRISE FUNCTION
+
+function surprise(){
+
+document.getElementById("message").style.display="block";
+
+confetti({
+
+particleCount:200,
+
+spread:100,
+
+origin:{y:0.6}
+
+});
+
+}
+
+// RESIZE
+
+window.addEventListener("resize",()=>{
+
+camera.aspect=window.innerWidth/window.innerHeight;
+
+camera.updateProjectionMatrix();
+
+renderer.setSize(window.innerWidth,window.innerHeight);
+
+});
+
+</script>
+
+</body>
+</html>
